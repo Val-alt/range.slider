@@ -1,9 +1,11 @@
 # Range Slider on JS
 
+[Demo](Http://val-alt.github.io/range.slider)
+
 ## Quick start
 
 ### Load
-Download the latest release
+Download the [latest release](Http://github.com/Val-alt/range.slider/tree/master/dist/)
 
 ### Usage
 HTML:

@@ -10,6 +10,7 @@ h1 {
   margin: 0 auto;
   max-width: 800px;
   justify-content: space-around;
+  align-items: center;
 }
 
 .flex__item {
@@ -27,4 +28,13 @@ code {
   border: 1px solid #e5e8ec;
   background: #fbfdff;
   margin-bottom: 20px;
+}
+
+a {
+  background-color: #505153;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-block;
+  padding: 10px;
 }

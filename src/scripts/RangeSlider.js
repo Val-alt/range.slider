@@ -1,10 +1,25 @@
-Object.prototype.RangeSlider = function({
-  posXInit,
-  tiks,
-  tiksName,
-  tiksType
-}) {
+Object.prototype.RangeSlider = function(parameters) {
   let sliderElem = this;
+
+  if (parameters === "disable") {
+    return (sliderElem.style.display = "none");
+  }
+  if (parameters === "enable") {
+    sliderElem.classList.remove("readonly");
+    return (sliderElem.style.display = "block");
+  }
+  if (parameters === "destroy") {
+    return sliderElem.remove();
+  }
+  if (parameters === "readonly") {
+    return sliderElem.classList.add("readonly");
+  }
+
+  let posXInit = parameters.posXInit;
+  let tiks = parameters.tiks;
+  let minMaxStep = parameters.minMaxStep;
+  let tiksName = parameters.tiksName;
+  let tiksType = parameters.tiksType;
 
   let tickDistance = 100 / tiks;
 
@@ -12,7 +27,7 @@ Object.prototype.RangeSlider = function({
     tiks !== undefined &&
     (tiksName == undefined || tiksName.length == tiks)
   ) {
-    let sliderTiks = document.createElement("div");
+    var sliderTiks = document.createElement("div");
     sliderTiks.setAttribute("class", "range-slider__tiks");
     sliderElem.appendChild(sliderTiks);
 
@@ -25,7 +40,11 @@ Object.prototype.RangeSlider = function({
     }
   }
 
-  if (tiksName !== undefined || tiksType !== undefined) {
+  if (
+    tiksName !== undefined ||
+    tiksType !== undefined ||
+    minMaxStep !== undefined
+  ) {
     if (tiksName == undefined) {
       tiksName = [];
 
@@ -38,6 +57,21 @@ Object.prototype.RangeSlider = function({
       if (tiksType === "percents") {
         for (let i = 0; i < tiks; i++) {
           tiksName[i] = `${tickDistance * (i + 1)}%`;
+        }
+      }
+
+      if (minMaxStep !== undefined) {
+        let min = minMaxStep[0];
+        let max = minMaxStep[1];
+        let step = minMaxStep[2];
+        if (min <= max && step >= 0) {
+          if (step === 0) {
+            step = 1;
+          }
+          tiksName[0] = min;
+          for (let i = 1; i <= (max - min) / step; i++) {
+            tiksName[i] = tiksName[i - 1] + step;
+          }
         }
       }
     }
@@ -72,6 +106,7 @@ Object.prototype.RangeSlider = function({
   let sliderTrack = document.createElement("div");
   let sliderBand = document.createElement("div");
   let sliderBandColor = document.createElement("div");
+  let sliderInput = document.createElement("input");
 
   sliderHandle.setAttribute("class", "range-slider__handle");
   sliderBand.setAttribute("class", "range-slider__band");
@@ -79,11 +114,14 @@ Object.prototype.RangeSlider = function({
     "class",
     "range-slider__band range-slider__band--color"
   );
+  sliderInput.setAttribute("type", "text");
+  sliderInput.setAttribute("name", "sliderInput");
 
   sliderElem.appendChild(sliderBand);
   sliderElem.appendChild(sliderBandColor);
   sliderElem.appendChild(sliderTrack);
   sliderTrack.appendChild(sliderHandle);
+  sliderElem.appendChild(sliderInput);
 
   let sliderBandPageX = sliderElem.getBoundingClientRect().left;
   let posX;
@@ -141,6 +179,7 @@ Object.prototype.RangeSlider = function({
     let posPers = `${Math.round((HandlePosX / sliderTrackWidth) * 100)}%`;
     sliderHandle.style.left = posPers;
     sliderBandColor.style.width = posPers;
+    sliderInput.value = posPers;
 
     if (sliderOptions !== undefined) {
       for (let i = 0; i < sliderOptions.children.length; i++) {
@@ -152,6 +191,10 @@ Object.prototype.RangeSlider = function({
             sliderOptions.children[i].classList.remove("active");
           }
           sliderOptions.children[i].classList.add("active");
+
+          if (tiksType !== "percents") {
+            sliderInput.value = sliderOptions.children[i].textContent;
+          }
         }
       }
     }
@@ -169,6 +212,22 @@ Object.prototype.RangeSlider = function({
     };
   };
 
+  sliderBand.onclick = e => clickOnBand(e);
+  sliderBandColor.onclick = e => clickOnBand(e);
+  if (sliderTiks !== undefined) {
+    sliderTiks.onclick = e => clickOnBand(e);
+  }
+
+  function clickOnBand(e) {
+    let posXClick;
+    if (e.clientX) {
+      posXClick = e.clientX;
+    } else if (e.targetTouches) {
+      posXClick = e.targetTouches[0].clientX;
+    }
+    sliderHandlePosX(posXClick);
+  }
+
   sliderHandle.ondragstart = function() {
     return false;
   };
@@ -176,6 +235,7 @@ Object.prototype.RangeSlider = function({
   function posXInitHandle(posXInit) {
     sliderHandle.style.left = `${posXInit}%`;
     sliderBandColor.style.width = `${posXInit}%`;
+    sliderInput.value = `${posXInit}%`;
 
     for (let i = 0; i < sliderOptions.children.length; i++) {
       if (
@@ -186,6 +246,7 @@ Object.prototype.RangeSlider = function({
           sliderOptions.children[i].classList.remove("active");
         }
         sliderOptions.children[i].classList.add("active");
+        sliderInput.value = sliderOptions.children[i].textContent;
       }
     }
   }

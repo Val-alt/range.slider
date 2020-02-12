@@ -1,11 +1,30 @@
 "use strict";
 
-Object.prototype.RangeSlider = function (_ref) {
-  var posXInit = _ref.posXInit,
-      tiks = _ref.tiks,
-      tiksName = _ref.tiksName,
-      tiksType = _ref.tiksType;
+Object.prototype.RangeSlider = function (parameters) {
   var sliderElem = this;
+
+  if (parameters === "disable") {
+    return sliderElem.style.display = "none";
+  }
+
+  if (parameters === "enable") {
+    sliderElem.classList.remove("readonly");
+    return sliderElem.style.display = "block";
+  }
+
+  if (parameters === "destroy") {
+    return sliderElem.remove();
+  }
+
+  if (parameters === "readonly") {
+    return sliderElem.classList.add("readonly");
+  }
+
+  var posXInit = parameters.posXInit;
+  var tiks = parameters.tiks;
+  var minMaxStep = parameters.minMaxStep;
+  var tiksName = parameters.tiksName;
+  var tiksType = parameters.tiksType;
   var tickDistance = 100 / tiks;
 
   if (tiks !== undefined && (tiksName == undefined || tiksName.length == tiks)) {
@@ -22,7 +41,7 @@ Object.prototype.RangeSlider = function (_ref) {
     }
   }
 
-  if (tiksName !== undefined || tiksType !== undefined) {
+  if (tiksName !== undefined || tiksType !== undefined || minMaxStep !== undefined) {
     if (tiksName == undefined) {
       tiksName = [];
 
@@ -37,6 +56,24 @@ Object.prototype.RangeSlider = function (_ref) {
           tiksName[_i2] = "".concat(tickDistance * (_i2 + 1), "%");
         }
       }
+
+      if (minMaxStep !== undefined) {
+        var min = minMaxStep[0];
+        var max = minMaxStep[1];
+        var step = minMaxStep[2];
+
+        if (min <= max && step >= 0) {
+          if (step === 0) {
+            step = 1;
+          }
+
+          tiksName[0] = min;
+
+          for (var _i3 = 1; _i3 <= (max - min) / step; _i3++) {
+            tiksName[_i3] = tiksName[_i3 - 1] + step;
+          }
+        }
+      }
     }
 
     tickDistance = 100 / tiksName.length;
@@ -45,19 +82,19 @@ Object.prototype.RangeSlider = function (_ref) {
     sliderElem.appendChild(sliderOptions);
     var sliderOption = [];
 
-    for (var _i3 = 0; _i3 < tiksName.length; _i3++) {
-      sliderOption[_i3] = document.createElement("p");
-      sliderOption[_i3].innerHTML = tiksName[_i3];
-      sliderOption[_i3].style.flex = "0 0 ".concat(tickDistance, "%");
+    for (var _i4 = 0; _i4 < tiksName.length; _i4++) {
+      sliderOption[_i4] = document.createElement("p");
+      sliderOption[_i4].innerHTML = tiksName[_i4];
+      sliderOption[_i4].style.flex = "0 0 ".concat(tickDistance, "%");
 
-      sliderOption[_i3].setAttribute("data-position", tickDistance * _i3);
+      sliderOption[_i4].setAttribute("data-position", tickDistance * _i4);
 
-      sliderOptions.appendChild(sliderOption[_i3]);
+      sliderOptions.appendChild(sliderOption[_i4]);
     }
 
     sliderOptions.onclick = function (e) {
-      for (var _i4 = 0; _i4 < sliderOptions.children.length; _i4++) {
-        sliderOptions.children[_i4].classList.remove("active");
+      for (var _i5 = 0; _i5 < sliderOptions.children.length; _i5++) {
+        sliderOptions.children[_i5].classList.remove("active");
       }
 
       e.target.classList.add("active");
@@ -70,13 +107,17 @@ Object.prototype.RangeSlider = function (_ref) {
   var sliderTrack = document.createElement("div");
   var sliderBand = document.createElement("div");
   var sliderBandColor = document.createElement("div");
+  var sliderInput = document.createElement("input");
   sliderHandle.setAttribute("class", "range-slider__handle");
   sliderBand.setAttribute("class", "range-slider__band");
   sliderBandColor.setAttribute("class", "range-slider__band range-slider__band--color");
+  sliderInput.setAttribute("type", "text");
+  sliderInput.setAttribute("name", "sliderInput");
   sliderElem.appendChild(sliderBand);
   sliderElem.appendChild(sliderBandColor);
   sliderElem.appendChild(sliderTrack);
   sliderTrack.appendChild(sliderHandle);
+  sliderElem.appendChild(sliderInput);
   var sliderBandPageX = sliderElem.getBoundingClientRect().left;
   var posX;
   var sliderHandleLeftCenter = sliderHandle.offsetWidth / 2;
@@ -134,15 +175,20 @@ Object.prototype.RangeSlider = function (_ref) {
     var posPers = "".concat(Math.round(HandlePosX / sliderTrackWidth * 100), "%");
     sliderHandle.style.left = posPers;
     sliderBandColor.style.width = posPers;
+    sliderInput.value = posPers;
 
     if (sliderOptions !== undefined) {
-      for (var _i5 = 0; _i5 < sliderOptions.children.length; _i5++) {
-        if (+sliderHandle.style.left.replace("%", "") >= +sliderOptions.children[_i5].dataset.position) {
-          for (var _i6 = 0; _i6 < sliderOptions.children.length; _i6++) {
-            sliderOptions.children[_i6].classList.remove("active");
+      for (var _i6 = 0; _i6 < sliderOptions.children.length; _i6++) {
+        if (+sliderHandle.style.left.replace("%", "") >= +sliderOptions.children[_i6].dataset.position) {
+          for (var _i7 = 0; _i7 < sliderOptions.children.length; _i7++) {
+            sliderOptions.children[_i7].classList.remove("active");
           }
 
-          sliderOptions.children[_i5].classList.add("active");
+          sliderOptions.children[_i6].classList.add("active");
+
+          if (tiksType !== "percents") {
+            sliderInput.value = sliderOptions.children[_i6].textContent;
+          }
         }
       }
     }
@@ -161,6 +207,32 @@ Object.prototype.RangeSlider = function (_ref) {
     };
   };
 
+  sliderBand.onclick = function (e) {
+    return clickOnBand(e);
+  };
+
+  sliderBandColor.onclick = function (e) {
+    return clickOnBand(e);
+  };
+
+  if (sliderTiks !== undefined) {
+    sliderTiks.onclick = function (e) {
+      return clickOnBand(e);
+    };
+  }
+
+  function clickOnBand(e) {
+    var posXClick;
+
+    if (e.clientX) {
+      posXClick = e.clientX;
+    } else if (e.targetTouches) {
+      posXClick = e.targetTouches[0].clientX;
+    }
+
+    sliderHandlePosX(posXClick);
+  }
+
   sliderHandle.ondragstart = function () {
     return false;
   };
@@ -168,14 +240,17 @@ Object.prototype.RangeSlider = function (_ref) {
   function posXInitHandle(posXInit) {
     sliderHandle.style.left = "".concat(posXInit, "%");
     sliderBandColor.style.width = "".concat(posXInit, "%");
+    sliderInput.value = "".concat(posXInit, "%");
 
-    for (var _i7 = 0; _i7 < sliderOptions.children.length; _i7++) {
-      if (+sliderHandle.style.left.replace("%", "") > +sliderOptions.children[_i7].dataset.position) {
-        for (var _i8 = 0; _i8 < sliderOptions.children.length; _i8++) {
-          sliderOptions.children[_i8].classList.remove("active");
+    for (var _i8 = 0; _i8 < sliderOptions.children.length; _i8++) {
+      if (+sliderHandle.style.left.replace("%", "") > +sliderOptions.children[_i8].dataset.position) {
+        for (var _i9 = 0; _i9 < sliderOptions.children.length; _i9++) {
+          sliderOptions.children[_i9].classList.remove("active");
         }
 
-        sliderOptions.children[_i7].classList.add("active");
+        sliderOptions.children[_i8].classList.add("active");
+
+        sliderInput.value = sliderOptions.children[_i8].textContent;
       }
     }
   }

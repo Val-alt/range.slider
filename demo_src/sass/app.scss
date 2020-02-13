@@ -19,6 +19,9 @@ h1 {
   padding: 25px;
   background-color: #fff;
   box-shadow: 0 3px 5px rgba(80, 81, 83, 0.5);
+  @media only screen and (max-width: 600px) {
+    padding: 15px 10px;
+  }
 }
 
 code {
@@ -28,6 +31,13 @@ code {
   border: 1px solid #e5e8ec;
   background: #fbfdff;
   margin-bottom: 20px;
+  overflow-x: scroll;
+
+  @media only screen and (max-width: 600px) {
+    max-width: 250px;
+    font-size: 12px;
+    margin-bottom: 0;
+  }
 }
 
 a {

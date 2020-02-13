@@ -1,32 +1,33 @@
-var MyRangeSlider1 = document.getElementById("MyRangeSlider1");
-MyRangeSlider1.RangeSlider({});
-
-var MyRangeSlider2 = document.getElementById("MyRangeSlider2");
-MyRangeSlider2.RangeSlider({
-  tiks: 16
+var MyRangeSlider1 = new RangeSlider({
+  element: document.getElementById("MyRangeSlider1")
 });
 
-var MyRangeSlider3 = document.getElementById("MyRangeSlider3");
-MyRangeSlider3.RangeSlider({
+var MyRangeSlider2 = new RangeSlider({
+  tiks: 16,
+  element: document.getElementById("MyRangeSlider2")
+});
+
+var MyRangeSlider3 = new RangeSlider({
   posXInit: 25,
   tiks: 10,
-  tiksType: "percents"
+  tiksType: "percents",
+  element: document.getElementById("MyRangeSlider3")
 });
-MyRangeSlider3.RangeSlider("readonly");
+MyRangeSlider3.readonly();
 
-var MyRangeSlider4 = document.getElementById("MyRangeSlider4");
-MyRangeSlider4.RangeSlider({
+var MyRangeSlider4 = new RangeSlider({
   tiks: 16,
-  tiksType: "numbers"
+  tiksType: "numbers",
+  element: document.getElementById("MyRangeSlider4")
 });
 
-var MyRangeSlider5 = document.getElementById("MyRangeSlider5");
-MyRangeSlider5.RangeSlider({
+var MyRangeSlider5 = new RangeSlider({
   posXInit: 65,
-  tiksName: ["bad", "okay", "good", "fine"]
+  tiksName: ["bad", "okay", "good", "fine"],
+  element: document.getElementById("MyRangeSlider5")
 });
 
-var MyRangeSlider6 = document.getElementById("MyRangeSlider6");
-MyRangeSlider6.RangeSlider({
-  minMaxStep: [20, 70, 10]
+var MyRangeSlider6 = new RangeSlider({
+  minMaxStep: [20, 70, 10],
+  element: document.getElementById("MyRangeSlider6")
 });

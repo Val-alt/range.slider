@@ -13,11 +13,12 @@ HTML:
 <div id="MyRangeSlider"></div>
 ```
 
-Call the plugin function and your carousel is ready.
+Call the plugin function and your range slider is ready.
 
 ```
-var MyRangeSlider = document.getElementById("MyRangeSlider");
-MyRangeSlider.RangeSlider();
+var MyRangeSlider = new RangeSlider({
+  element: document.getElementById("MyRangeSlider")
+});
 ```
 
 ### Options
@@ -32,26 +33,27 @@ MyRangeSlider.RangeSlider();
     - "percents"   
 - minMaxStep:
     - array of [min, max, step]
-- "disable"
+- .disable()
     - hide object
-- "enable"
+- .enable()
     - show object
-- "destroy"
+- .destroy()
     - destroy object
-- "readonly"
+- .readonly()
     - transparent view-only object
 ```
-MyRangeSlider.RangeSlider({
+var MyRangeSlider = new RangeSlider({
   posXInit: "65",
   tiks: 4,
-  tiksName: ["bad", "okay", "good", "fine"]
+  tiksName: ["bad", "okay", "good", "fine"],
+  element: document.getElementById("MyRangeSlider")
 });
 
-MyRangeSlider.RangeSlider("readonly");
+MyRangeSlider.readonly();
 ```
 
 ## Documentation
 
-Hidden input gets the values ​​tiksName. If tiksName is absent or is a percentage, then the input gets a percentage value.
+Hidden Input gets the values ​​tiksName. If tiksName is absent or is a percentage, then the Input gets a percentage value.
 
 * Сross-browser compatibility

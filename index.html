@@ -12,44 +12,60 @@
       <h1>
         Range Slider
       </h1>
-      <a href="https://github.com/Val-alt/range.slider" target="_blank">GitHub</a>
+      <a href="https://github.com/Val-alt/range.slider" target="_blank"
+        >GitHub</a
+      >
       <div class="flex__item">
-        <code>MyRangeSlider1.RangeSlider( <br>);
-        </code>
+        <pre><code
+          >var MyRangeSlider1 = new RangeSlider({ 
+  element: document.getElementById("MyRangeSlider1") 
+});</code></pre>
         <div id="MyRangeSlider1"></div>
       </div>
       <div class="flex__item">
-        <code>MyRangeSlider2.RangeSlider({ <br> tiks: 16 <br> });
-        </code>
+        <pre><code
+          >var MyRangeSlider2 = new RangeSlider({ 
+  tiks: 16, 
+  element: document.getElementById("MyRangeSlider2") 
+});</code></pre>
         <div id="MyRangeSlider2"></div>
       </div>
       <div class="flex__item">
-        <code
-          >MyRangeSlider3.RangeSlider({  <br> posXInit: 25, tiks: 10, tiksType:
-          "percents"  <br> });
-          <br>
-          MyRangeSlider3.RangeSlider( "readonly" );</code
-        >
+        <pre><code
+          >var MyRangeSlider3 = new RangeSlider({ 
+  posXInit: 25, 
+  tiks: 10,
+  tiksType: "percents", 
+  element: document.getElementById("MyRangeSlider3") 
+});
+
+MyRangeSlider3.readonly();</code></pre>
         <div id="MyRangeSlider3"></div>
       </div>
       <div class="flex__item">
-        <code
-          >MyRangeSlider4.RangeSlider({  <br> tiks: 16, tiksType: "numbers" <br>
-          });</code
-        >
+        <pre><code
+          >var MyRangeSlider4 = new RangeSlider({ 
+  tiks: 16, 
+  tiksType: "numbers",
+  element: document.getElementById("MyRangeSlider4") 
+});</code></pre>
         <div id="MyRangeSlider4"></div>
       </div>
       <div class="flex__item">
-        <code
-          >MyRangeSlider5.RangeSlider({ <br> posXInit: 65, tiksName: ["bad",
-          "okay", "good", "fine"] <br> });</code
-        >
+        <pre><code
+          >var MyRangeSlider5 = new RangeSlider({ 
+  posXInit: 65, 
+  tiksName: ["bad", "okay", "good", "fine"],
+  element: document.getElementById("MyRangeSlider5") 
+});</code></pre>
         <div id="MyRangeSlider5"></div>
       </div>
       <div class="flex__item">
-        <code
-          >MyRangeSlider6.RangeSlider({ <br> minMaxStepTiks: [20, 100, 10] <br> });</code
-        >
+        <pre><code
+          >var MyRangeSlider6 = new RangeSlider({ 
+  minMaxStep: [20, 70, 10],
+  element: document.getElementById("MyRangeSlider6") 
+});</code></pre>
         <div id="MyRangeSlider6"></div>
       </div>
     </div>
